@@ -1,7 +1,8 @@
 {
   "manifest_version": 3,
   "name": "R3 - Record. Run. Repeat.",
-  "version": "1.0.0",
+  "version": "0.0.1",
+  "version_name": "0.0.1 (Beta)",
   "description": "Record and replay web interaction workflows for regression testing",
   "permissions": ["storage", "scripting", "tabs"],
   "host_permissions": ["<all_urls>"],
