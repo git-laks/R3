@@ -17,11 +17,11 @@
     </header>
 
     <section class="controls">
-      <button id="recordBtn" class="btn btn-record">
+      <button id="recordBtn" class="btn btn-record" title="Record browser interactions as test steps">
         <span class="icon">&#9679;</span>
         <span class="text">Start Recording</span>
       </button>
-      <button id="playBtn" class="btn btn-play">
+      <button id="playBtn" class="btn btn-play" title="Replay all recorded steps in the active tab">
         <span class="icon">&#9654;</span>
         <span class="text">Play Recording</span>
       </button>
@@ -46,15 +46,15 @@
     </section>
 
     <section class="file-controls">
-      <button id="importBtn" class="btn btn-secondary">
+      <button id="importBtn" class="btn btn-secondary" title="Load test steps from a CSV file">
         <span class="icon">&#8593;</span>
         Import CSV
       </button>
-      <button id="exportBtn" class="btn btn-secondary">
+      <button id="exportBtn" class="btn btn-secondary" title="Save recorded steps as a CSV file">
         <span class="icon">&#8595;</span>
         Export CSV
       </button>
-      <button id="clearBtn" class="btn btn-danger">
+      <button id="clearBtn" class="btn btn-danger" title="Delete all recorded steps">
         <span class="icon">&#10005;</span>
         Clear
       </button>
@@ -83,7 +83,7 @@
     <section id="recordingToolbar" class="recording-toolbar" style="display: none;">
       <label class="toolbar-label">Wait (ms):</label>
       <input type="number" id="waitDuration" class="wait-input" value="2000" min="0" step="500">
-      <button id="addWaitBtn" class="btn btn-wait">+ Add Wait</button>
+      <button id="addWaitBtn" class="btn btn-wait" title="Insert a pause between steps during recording">+ Add Wait</button>
     </section>
   </div>
 
