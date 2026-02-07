@@ -58,13 +58,11 @@ async function handleMessage(message, sender, sendResponse) {
       case 'STEP_COMPLETE':
         // Track playback progress for re-injection after navigation
         state.lastCompletedStepIndex = message.index;
-        forwardToPopup(message);
         break;
 
       case 'PLAYBACK_COMPLETE':
         state.playingTabId = null;
         state.lastCompletedStepIndex = -1;
-        forwardToPopup(message);
         break;
 
       case 'NAVIGATE':
