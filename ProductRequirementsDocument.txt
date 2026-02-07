@@ -1,0 +1,141 @@
+1. Executive Summary
+Objective: Build a lightweight, zero-dependency browser extension that allows non-technical users to record interaction workflows on internal web applications and replay them reliably. Key Value: Removes the need for complex automation suites (Selenium/Cypress) for simple data-entry regression tests. Distribution Strategy: Chrome Web Store (Unlisted/Private initially) + CSV file sharing.
+
+2. User Stories
+As a QA Lead, I want to record a "Golden Path" application flow (filling out a loan application) so that I can save it as a standard test case.
+
+As a Non-Technical Team Member, I want to import a csv file sent by my lead and click "Play" to watch the test run on my machine without installing Python or Node.js.
+
+As a Developer, I want the recorder to be smart enough to handle React/Angular state changes (like validation messages) so the test doesn't fail on "hidden" logic.
+
+3. Functional Requirements
+3.1 The Recording Engine (Content Script)
+The recorder must inject into the active tab and listen for user events.
+
+FR-1.1: Event Capture:
+
+Must capture click events (buttons, links, divs acting as buttons).
+
+Must capture change or input events for text fields, textareas, and selects.
+
+Constraint: For text inputs, record only the final committed value (on blur or focus change) to avoid creating 100 steps for typing "Hello".
+
+FR-1.2: Selector Prioritization Strategy: To ensure stability across deployments, the recorder must identify elements using the following hierarchy:
+
+data-testid, data-test-id, data-cy (High reliability).
+
+id (Only if the ID does not contain numbers that look dynamic, e.g., input-1234 is bad, username-field is good).
+
+name attribute.
+
+Label text or Placeholder text (e.g., Input with placeholder "Enter Email").
+
+CSS Path (Fallback: div > form > input:nth-child(2)).
+
+FR-1.3: Visual Feedback:
+
+The extension must outline the element in Red (2px solid) while recording to confirm to the user that the element was detected.
+
+3.2 The Replay Engine (Content Script + Scripting API)
+The replay engine executes the csv steps.
+
+FR-2.1: Robust Element Location (Polling):
+
+The script must not fail immediately if an element is missing.
+
+It must implement a Polling Mechanism: Retry finding the selector every 100ms for a maximum of 5,000ms (5 seconds).
+
+FR-2.2: Framework Compatibility (Synthetic Events):
+
+Changing a value via .value = "xyz" is insufficient for React/Angular.
+
+The player must programmatically dispatch:
+
+input (bubbles: true)
+
+change (bubbles: true)
+
+blur (to trigger validation)
+
+FR-2.3: Single Page App (SPA) Support:
+
+If a step involves a URL change within the same domain (soft navigation), the extension must wait for the document.readyState to be complete before attempting the next step.
+
+3.3 Data Management (CSV Schema)
+FR-3.1: Export Format:
+
+Users can download the recording as a .csv file.
+
+FR-3.2: Import Capability:
+
+Users can paste CSV text or upload a .csv file to load a test.
+
+FR-3.3: Schema Definition:
+
+CSV Schema Definition The extension must parse and generate CSV files with the following headers. The system must be robust enough to handle extra whitespace or empty columns.
+Action,Target (Selector),Value (Input Data),Description (Optional)
+OPEN,,https://wdc-qa-mastercard.triangle.com/content/dsa2/en.html?cardType=OMX,Open the main site
+WAIT,,2000,Wait for load
+TYPE,[data-testid='fname'],John,Enter First Name
+TYPE,#email-field,john@test.com,Enter Email
+CLICK,button[type='submit'],,Click Submit
+
+FR-3.3.1: The Parser Logic
+
+Import: The extension must read the CSV.
+
+Ignore Header: It must skip the first row (headers).
+
+Trimming: It must trim whitespace from cell values (so " OPEN " becomes "OPEN").
+
+Case Insensitivity: It should accept Open, open, or OPEN.
+
+Export:
+
+When the user clicks "Stop Recording", the extension converts the array of steps into a CSV string and triggers a download for recording_[date].csv.
+
+
+
+3.4 User Interface (Popup)
+FR-4.1: Record/Stop Toggle: A clear button that changes state.
+
+FR-4.2: Step Counter: Show "Recorded Steps: 5" so the user knows it's working.
+
+FR-4.3: Log View: During Replay, show a list of steps executing (e.g., "Step 1: Success", "Step 2: Waiting...").
+
+4. Non-Functional Requirements (NFR)
+NFR-1: Security (Manifest V3): The extension must not use eval() or remote code execution. All logic must be contained within the package.
+
+NFR-2: Performance: The recorder listeners must be passive and not block the main thread of the application being tested.
+
+NFR-3: Local Storage: The extension should auto-save the current recording to chrome.storage.local to prevent data loss if the popup is closed accidentally.
+
+5. Technical Constraints & Edge Cases
+TC-1: Dynamic IDs:
+
+Risk: React often generates IDs like r:1235.
+
+Mitigation: The recorder must regex-check IDs. If an ID looks auto-generated (contains random alphanumeric strings), discard it and use a CSS selector or Attribute instead.
+
+TC-2: Iframes:
+
+Scope: V1 will not support recording interactions inside iFrames (e.g., Stripe elements or embedded chat widgets) to keep scope manageable.
+
+TC-3: Auth Persistence:
+
+The extension assumes the user is logged in or the recording includes the login steps. It does not manage cookies/sessions itself.
+
+TC-4: Comma Handling
+
+Risk: If the user types "Hello, world" into a field, the comma breaks the CSV structure.
+
+Requirement: The exporter must wrap any value containing a comma in quotes (e.g., "Hello, world"). The importer must respect quoted strings.
+
+Recommendation: Use a tiny library like PapaParse (it's very lightweight) inside the extension to handle this cleanly, rather than writing a raw string splitter.
+
+6. Future Scope (Post-V1)
+Variables: Support for {{timestamp}} variable in input fields to generate unique data (e.g., "user_{{timestamp}}@test.com").
+
+Assertions: Ability to record an "Expectation" (e.g., "Verify that the success message 'Thank you' appears").
+
+Cloud Sync: Sync recordings to a shared Google Drive or One Drive instead of passing CSV files.

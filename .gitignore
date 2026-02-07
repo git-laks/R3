@@ -1,0 +1,27 @@
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+nul
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Claude Code
+.claude/
+
+# Chrome extension packaging
+*.crx
+*.pem
+*.zip
+
+# Node (in case of future tooling)
+node_modules/
+package-lock.json
+
+# Logs
+*.log

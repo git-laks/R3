@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>R3 - Test Record Run Repeat</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="header-top">
+        <img src="../icons/logo.png" alt="R3" class="header-logo">
+        <button id="popoutBtn" class="btn-popout" title="Pop out to separate window">&#8599;</button>
+      </div>
+      <p class="subtitle">Test Record Run Repeat</p>
+    </header>
+
+    <section class="controls">
+      <button id="recordBtn" class="btn btn-record">
+        <span class="icon">&#9679;</span>
+        <span class="text">Start Recording</span>
+      </button>
+      <button id="playBtn" class="btn btn-play">
+        <span class="icon">&#9654;</span>
+        <span class="text">Play Recording</span>
+      </button>
+    </section>
+
+    <section class="stats">
+      <div class="stat-item">
+        <span class="stat-label">Recorded Steps:</span>
+        <span id="stepCount" class="stat-value">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Status:</span>
+        <span id="status" class="stat-value status-idle">Idle</span>
+      </div>
+    </section>
+
+    <section class="settings">
+      <label class="checkbox-label">
+        <input type="checkbox" id="continueOnError">
+        <span>Continue on error</span>
+      </label>
+    </section>
+
+    <section class="file-controls">
+      <button id="importBtn" class="btn btn-secondary">
+        <span class="icon">&#8593;</span>
+        Import CSV
+      </button>
+      <button id="exportBtn" class="btn btn-secondary">
+        <span class="icon">&#8595;</span>
+        Export CSV
+      </button>
+      <button id="clearBtn" class="btn btn-danger">
+        <span class="icon">&#10005;</span>
+        Clear
+      </button>
+      <input type="file" id="fileInput" accept=".csv" style="display: none;">
+    </section>
+
+    <section class="log-section">
+      <div class="log-header">
+        <span>Execution Log</span>
+        <button id="clearLogBtn" class="btn-icon" title="Clear log">&#10005;</button>
+      </div>
+      <div id="logView" class="log-view">
+        <div class="log-empty">No activity yet</div>
+      </div>
+    </section>
+
+    <section class="steps-section">
+      <div class="steps-header">
+        <span>Recorded Steps</span>
+      </div>
+      <div id="stepsView" class="steps-view">
+        <div class="steps-empty">No steps recorded</div>
+      </div>
+    </section>
+
+    <section id="recordingToolbar" class="recording-toolbar" style="display: none;">
+      <label class="toolbar-label">Wait (ms):</label>
+      <input type="number" id="waitDuration" class="wait-input" value="2000" min="0" step="500">
+      <button id="addWaitBtn" class="btn btn-wait">+ Add Wait</button>
+    </section>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
