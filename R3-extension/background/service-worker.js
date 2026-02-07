@@ -40,9 +40,8 @@ async function handleMessage(message, sender, sendResponse) {
         break;
 
       case 'STEP_RECORDED':
-        // Store step in chrome.storage and forward to popup
+        // Store step in chrome.storage (popup receives this message directly)
         await saveRecordedStep(message.step);
-        forwardToPopup(message);
         break;
 
       case 'START_PLAYBACK':

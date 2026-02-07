@@ -335,14 +335,19 @@ class R3Popup {
         description: 'Navigate to starting page'
       });
 
-      // Send message to background to start recording
+      // Persist state BEFORE starting recording to avoid race condition:
+      // saveState passes the steps array by reference, so if recording starts
+      // first and a step arrives while the write is in-flight, the mutation
+      // gets picked up by the write AND saved again by the background.
+      this.state.mode = 'recording';
+      await this.saveState();
+
+      // Now start recording — storage is already committed
       await chrome.runtime.sendMessage({
         type: 'START_RECORDING',
         tabId: tab.id
       });
 
-      this.state.mode = 'recording';
-      await this.saveState();
       this.updateUI();
       this.addLog('info', 'Recording started');
     } catch (error) {
@@ -443,7 +448,6 @@ class R3Popup {
     switch (message.type) {
       case 'STEP_RECORDED':
         this.state.steps.push(message.step);
-        this.saveState();
         this.updateUI();
         this.addLog('info', `Recorded: ${message.step.action} ${message.step.target || ''}`);
         break;
