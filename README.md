@@ -11,7 +11,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/platform-Chrome-blue" alt="Chrome">
   <img src="https://img.shields.io/badge/manifest-v3-green" alt="Manifest V3">
-  <img src="https://img.shields.io/badge/dependencies-1_(PapaParse)-orange" alt="Dependencies">
+  <img src="https://img.shields.io/badge/dependencies-0-brightgreen" alt="Dependencies">
   <img src="https://img.shields.io/badge/license-MIT-blue" alt="License">
 </p>
 
@@ -110,8 +110,6 @@ R3-extension/
     popup.html/css/js    # Extension UI
   utils/
     selectors.js         # Selector generation with priority hierarchy
-  lib/
-    papaparse.min.js     # CSV parsing (only external dependency)
   icons/
     logo.png             # Extension logo
     icon16/48/128.png    # Toolbar and store icons
