@@ -139,7 +139,8 @@
         if (['checkbox', 'radio'].includes(inputType)) return;
 
         if (currentValue !== this.lastInputValue && currentValue !== '') {
-          this.recordStep('TYPE', element, currentValue);
+          const action = this.isDynamicInput(element) ? 'TYPE_CHAR' : 'TYPE';
+          this.recordStep(action, element, currentValue);
           this.showFeedback(element);
         } else if (currentValue === '' && this.lastInputValue !== '') {
           // Field was cleared
@@ -213,6 +214,38 @@
         const buttonTypes = ['button', 'submit', 'reset', 'image'];
         return !buttonTypes.includes(inputType);
       }
+      return false;
+    }
+
+    /**
+     * Detect if an input field requires character-by-character typing.
+     * These are fields with per-keystroke handlers (autocomplete, typeahead,
+     * live search, etc.) where setting the value directly won't trigger
+     * the expected behavior during playback.
+     */
+    isDynamicInput(element) {
+      // AngularJS: per-keystroke event/model attributes
+      const ngAttrs = ['ng-change', 'ng-keyup', 'ng-keydown', 'ng-keypress'];
+      for (const attr of ngAttrs) {
+        if (element.hasAttribute(attr) || element.hasAttribute(`data-${attr}`)) {
+          return true;
+        }
+      }
+
+      // ARIA autocomplete indicators (used by most autocomplete libraries)
+      if (element.getAttribute('role') === 'combobox') return true;
+      if (element.getAttribute('aria-autocomplete')) return true;
+
+      // HTML5 datalist binding
+      if (element.hasAttribute('list')) return true;
+
+      // Angular 2+: reflected model binding
+      if (element.hasAttribute('ng-reflect-model')) return true;
+
+      // Common autocomplete library data attributes
+      if (element.hasAttribute('data-autocomplete')) return true;
+      if (element.hasAttribute('data-typeahead')) return true;
+
       return false;
     }
 
