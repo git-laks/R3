@@ -30,4 +30,4 @@ R3 does not include any third-party libraries, SDKs, or services. There are no a
 
 ## Contact
 
-If you have any questions about this privacy policy, please open an issue on the [GitHub repository](https://github.com/Laks/Test-Record-Run-Repeat-R3).
+If you have any questions about this privacy policy, please open an issue on the [GitHub repository](https://github.com/git-laks/R3).
