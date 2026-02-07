@@ -128,9 +128,19 @@ R3-extension/
 - **Manifest V3**
 - Same-origin iframes supported; cross-origin iframes are skipped (browser security)
 
-## Contributing
+## 🤝 Contributing to R3
 
-Issues and pull requests are welcome! If you find a bug or have a feature request, please [open an issue](../../issues).
+**Web automation belongs to everyone.**
+
+Whether you are a seasoned React developer or just wrote your first line of JavaScript, your help is welcome here! R3 is a labor of love, and we want to make it the friendliest testing tool on the web.
+
+### How you can help:
+* **🐛 Found a bug?** Open an [Issue](https://github.com/git-laks/R3/issues) and tell us how to reproduce it.
+* **💡 Have an idea?** We love feature requests! Let us know what would make your life easier.
+* **💻 Want to code?** PRs are welcome! If you want to add support for a new framework (Vue? Svelte?) or just fix a typo, go for it.
+
+**A Note on Culture:**
+This project follows a simple code of conduct: **Be kind.** We are all here to learn and build cool things. Constructive feedback is love; hate has no place here.
 
 ### Development
 
