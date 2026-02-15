@@ -156,7 +156,6 @@ This project is licensed under the [MIT License](LICENSE) — you are free to us
 
 ## Roadmap
 
-- [ ] Chrome Web Store listing
 - [ ] React and Vue testing
 - [ ] Variable support (e.g., `{{timestamp}}` for dynamic data)
 - [ ] Assertion steps (verify text content, element state)

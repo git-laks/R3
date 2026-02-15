@@ -127,35 +127,42 @@
       }
     }
 
-    handleBlur(event) {
-      if (!this.isRecording) return;
+    /**
+     * Flush any pending input value change on an element.
+     * Records TYPE/TYPE_CHAR/CLEAR if the value changed since focus.
+     * Returns true if a step was recorded.
+     */
+    flushPendingInput(element) {
+      if (!this.isInputElement(element)) return false;
 
-      const element = event.target;
-
-      // Only handle input elements
-      if (!this.isInputElement(element)) return;
-
-      // Check if value changed
       const currentValue = element.value || '';
       const tagName = element.tagName.toLowerCase();
 
-      // For text inputs, record TYPE action if value changed
       if (tagName === 'input' || tagName === 'textarea') {
         const inputType = element.getAttribute('type') || 'text';
-
-        // Skip checkbox/radio (handled by change event)
-        if (['checkbox', 'radio'].includes(inputType)) return;
+        if (['checkbox', 'radio'].includes(inputType)) return false;
 
         if (currentValue !== this.lastInputValue && currentValue !== '') {
           const action = this.isDynamicInput(element) ? 'TYPE_CHAR' : 'TYPE';
           this.recordStep(action, element, currentValue);
           this.showFeedback(element);
+          // Update so subsequent blur won't double-record
+          this.lastInputValue = currentValue;
+          return true;
         } else if (currentValue === '' && this.lastInputValue !== '') {
-          // Field was cleared
           this.recordStep('CLEAR', element);
           this.showFeedback(element);
+          this.lastInputValue = currentValue;
+          return true;
         }
       }
+      return false;
+    }
+
+    handleBlur(event) {
+      if (!this.isRecording) return;
+
+      this.flushPendingInput(event.target);
 
       this.lastInputElement = null;
       this.lastInputValue = '';
@@ -201,8 +208,10 @@
 
       const element = event.target;
 
-      // For Enter key on forms, this might trigger a submit
-      // We record it as a PRESS action
+      // Flush any pending input value before recording the key press
+      // so that TYPE/TYPE_CHAR appears before PRESS in the step list
+      this.flushPendingInput(element);
+
       this.recordStep('PRESS', element, key, `Press ${key} key`);
       this.showFeedback(element);
     }
