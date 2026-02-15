@@ -287,7 +287,30 @@ async function saveRecordedStep(step) {
 
 // Handle tab updates during playback — re-inject player after mid-playback navigation
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-  if (tabId !== state.playingTabId || changeInfo.status !== 'complete') return;
+  if (changeInfo.status !== 'complete') return;
+
+  // Handle Recording Navigation
+  if (tabId === state.recordingTabId) {
+    try {
+      // Check if recorder is still alive (it shouldn't be after nav, but good to check)
+      try {
+        const response = await chrome.tabs.sendMessage(tabId, { type: 'GET_STATUS' });
+        if (response && response.isRecording) return;
+      } catch (e) {
+        // Expected: content script destroyed
+      }
+
+      console.log('[R3] Recording tab navigated. Re-injecting recorder...');
+      await injectScript(tabId, 'utils/selectors.js');
+      await injectScript(tabId, 'content/recorder.js');
+      await chrome.tabs.sendMessage(tabId, { type: 'START_RECORDING' });
+    } catch (error) {
+      console.error('[R3] Failed to re-inject recorder:', error);
+    }
+    return;
+  }
+
+  if (tabId !== state.playingTabId) return;
   if (state.isSettingUp) return;             // initial OPEN handled by startPlayback
   if (state.lastCompletedStepIndex < 0) return; // playback hasn't started yet
 
