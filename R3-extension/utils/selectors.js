@@ -99,22 +99,6 @@ const SelectorUtils = {
    * @returns {string|null} - A selector using the label, or null
    */
   findByLabel(element) {
-    const id = element.id;
-
-    // Check for label with 'for' attribute
-    if (id) {
-      const label = document.querySelector(`label[for="${CSS.escape(id)}"]`);
-      if (label && label.textContent) {
-        const labelText = label.textContent.trim();
-        if (labelText) {
-          // Use XPath-style selector isn't standard, so use a combination
-          // Return a hint that can be used for finding
-          const tagName = element.tagName.toLowerCase();
-          return `${tagName}#${CSS.escape(id)}`;
-        }
-      }
-    }
-
     // Check for parent label (wrapping the element)
     const parentLabel = element.closest('label');
     if (parentLabel && parentLabel.textContent) {
