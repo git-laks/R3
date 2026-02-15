@@ -84,7 +84,7 @@ CLICK,#submit-btn,,Click submit
 
 ### From Chrome Web Store
 
-*Coming soon.*
+*https://chromewebstore.google.com/detail/r3-record-run-repeat/iobngjbgckgmcnmlfpdkebepgbkifpdo*
 
 ## Quick Start
 
