@@ -150,6 +150,19 @@ This project follows a simple code of conduct: **Be kind.** We are all here to l
 4. Open the service worker console from the extensions page for background script logs
 5. Open DevTools on the test page for content script logs (`[R3]` prefix)
 
+### Running Tests
+
+To run the unit tests:
+
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Run tests:
+   ```bash
+   npm test
+   ```
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE) — you are free to use, modify, and distribute it, with attribution to the original author.

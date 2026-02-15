@@ -1,0 +1,19 @@
+{
+  "name": "r3-extension",
+  "version": "0.0.1",
+  "description": "R3 - Record. Run. Repeat. Chrome Extension",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "chrome-extension",
+    "testing",
+    "recording"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^30.2.0",
+    "jest-environment-jsdom": "^30.2.0"
+  }
+}

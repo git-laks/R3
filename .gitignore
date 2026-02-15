@@ -25,3 +25,7 @@ package-lock.json
 
 # Logs
 *.log
+
+# Test artifacts
+coverage/
+test_output*.txt
