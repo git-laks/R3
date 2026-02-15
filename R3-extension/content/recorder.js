@@ -6,6 +6,14 @@
 (function() {
   'use strict';
 
+  const DEBUG = false;
+
+  function log(...args) {
+    if (DEBUG) {
+      console.log(...args);
+    }
+  }
+
   // Prevent multiple injections
   if (window.R3Recorder) {
     window.R3Recorder.start();
@@ -27,7 +35,7 @@
       if (this.isRecording) return;
       this.isRecording = true;
       this.attachListeners();
-      console.log('[R3] Recording started');
+      log('[R3] Recording started');
     }
 
     stop() {
@@ -35,7 +43,7 @@
       this.isRecording = false;
       this.detachListeners();
       this.removeHighlight();
-      console.log('[R3] Recording stopped');
+      log('[R3] Recording stopped');
     }
 
     attachListeners() {
@@ -272,7 +280,7 @@
           type: 'STEP_RECORDED',
           step
         }).then(() => {
-          console.log('[R3] Recorded:', step);
+          log('[R3] Recorded:', step);
         }).catch(err => {
           console.error('[R3] Failed to send step:', err);
         });
@@ -344,5 +352,5 @@
     return true; // Keep channel open for async response
   });
 
-  console.log('[R3] Recorder injected');
+  log('[R3] Recorder injected');
 })();
