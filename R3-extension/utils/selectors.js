@@ -195,34 +195,6 @@ const SelectorUtils = {
   },
 
   /**
-   * Find an element by a selector with multiple fallback strategies
-   * @param {string} selector - The selector to try
-   * @returns {Element|null} - The found element or null
-   */
-  findElement(selector) {
-    if (!selector) return null;
-
-    try {
-      // Try the selector directly
-      const element = document.querySelector(selector);
-      if (element) return element;
-
-      // If selector failed, try some fallbacks
-      // Handle escaped characters that might not work in all browsers
-      const unescapedSelector = selector.replace(/\\(.)/g, '$1');
-      if (unescapedSelector !== selector) {
-        const fallbackElement = document.querySelector(unescapedSelector);
-        if (fallbackElement) return fallbackElement;
-      }
-
-      return null;
-    } catch (e) {
-      console.error('Selector error:', e.message, 'for selector:', selector);
-      return null;
-    }
-  },
-
-  /**
    * Get a human-readable description of an element
    * @param {Element} element - The element to describe
    * @returns {string} - A description of the element
