@@ -501,15 +501,29 @@ class R3Popup {
         const steps = [];
         const startIndex = this.isHeaderRow(rows[0]) ? 1 : 0;
 
+        const unescape = (str) => {
+          str = (str || '').trim();
+          // Remove leading single quote if it was added for CSV injection protection
+          if (str.startsWith("'") && (
+            str.startsWith("'=") ||
+            str.startsWith("'+") ||
+            str.startsWith("'-") ||
+            str.startsWith("'@")
+          )) {
+            return str.substring(1);
+          }
+          return str;
+        };
+
         for (let i = startIndex; i < rows.length; i++) {
           const row = rows[i];
           // Skip empty rows
           if (row.length >= 1 && row[0].trim()) {
             steps.push({
-              action: (row[0] || '').trim().toUpperCase(),
-              target: (row[1] || '').trim(),
-              value: (row[2] || '').trim(),
-              description: (row[3] || '').trim()
+              action: unescape(row[0] || '').toUpperCase(),
+              target: unescape(row[1] || ''),
+              value: unescape(row[2] || ''),
+              description: unescape(row[3] || '')
             });
           }
         }
@@ -711,7 +725,14 @@ const CSV = {
   stringify(data) {
     return data.map(row => {
       return row.map(cell => {
-        const str = (cell == null) ? '' : String(cell);
+        let str = (cell == null) ? '' : String(cell);
+
+        // Security: Prevent CSV Injection by prepending a single quote
+        // if the cell starts with =, +, -, or @
+        if (str.startsWith('=') || str.startsWith('+') || str.startsWith('-') || str.startsWith('@')) {
+          str = "'" + str;
+        }
+
         // Quote if contains comma, quote, or newline
         if (str.includes(',') || str.includes('"') || str.includes('\n') || str.includes('\r')) {
           return '"' + str.replace(/"/g, '""') + '"';
